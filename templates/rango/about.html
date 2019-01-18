@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+{% load staticfiles %}
+
+<html>
+<head>
+    <title>About</title>
+</head>
+
+<body>
+<div>
+    <img src="{% static "images/about.png" %}"
+         alt="About This Site" />
+</div>
+<div>
+    This project has been put together by Adrian Borg
+</div>
+<div>
+    <a href="/rango/">Index</a>
+</div>
+<div>
+    <img src="{{ MEDIA_URL }}cat.jpg"
+         alt="cat"/>
+</div>
+</body>
+</html>
