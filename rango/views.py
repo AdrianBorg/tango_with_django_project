@@ -1,7 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from tango_with_django_project.settings import MEDIA_URL
 from rango.models import Category, Page
+from rango.forms import CategoryForm, PageForm
 
 # Create your views here.
 
@@ -32,6 +31,7 @@ def index(request):
 
 def about(request):
     return render(request, 'rango/about.html')
+
 
 def show_category(request, category_name_slug):
     # Create a context dictionary which we can pass
@@ -65,4 +65,56 @@ def show_category(request, category_name_slug):
 
     # Go render the response and return it to the client.
     return render(request, 'rango/category.html', context_dict)
+
+
+def add_category(request):
+    form = CategoryForm()
+
+    # A HTTP POST?
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # Save the new category to the database.
+            cat = form.save(commit=True)
+            print("Added category: ", cat, ' | slug: ', cat.slug)
+            # Now that the category is saved
+            # We could give a confirmation message
+            # But since the most recent category added is on the index page
+            # Then we can direct the user back to the index page.
+            return index(request)
+        else:
+            # The supplied form contained errors -
+            # just print them to the terminal.
+            print(form.errors)
+
+    # Will handle the bad form, new form, or no form supplied cases.
+    # Render the form with error messages (if any).
+    return render(request, 'rango/add_category.html', {'form': form})
+
+
+def add_page(request, category_name_slug):
+    try:
+        category = Category.objects.get(slug=category_name_slug)
+    except Category.DoesNotExist:
+        category = None
+
+    form = PageForm()
+    if request.method == 'POST':
+        form = PageForm(request.POST)
+        if form.is_valid():
+            if category:
+                page = form.save(commit=False)
+                page.category = category
+                page.views = 0
+                page.save()
+                print('Page added: ', page.title, ' | cat: ', page.category,
+                      ' | url: ', page.url)
+                return show_category(request, category_name_slug)
+        else:
+            print(form.errors)
+
+    context_dict = {'form': form, 'category': category}
+    return render(request, 'rango/add_page.html', context_dict)
 
