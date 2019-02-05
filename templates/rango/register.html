@@ -13,9 +13,9 @@
         {% else %}
             Rango says: <strong>register here!</strong><br/>
             <form id="user_form" method="post" action="{% url 'register' %}"
-                  endtype="multipart/form-data">
+                  enctype="multipart/form-data">
 
-                {% cerf_token %}
+                {% csrf_token %}
 
                 <!-- Display each form -->
                 {{ user_form.as_p }}

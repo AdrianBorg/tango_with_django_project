@@ -118,6 +118,7 @@ def add_page(request, category_name_slug):
     context_dict = {'form': form, 'category': category}
     return render(request, 'rango/add_page.html', context_dict)
 
+
 def register(request):
     # A boolean value for telling the template
     # whether the registration was successful.
@@ -130,7 +131,7 @@ def register(request):
         # Attempt to grab information from the raw form from information.
         # Note that we make use of both UserForm and UserProfileForm.
         user_form = UserForm(data=request.POST)
-        profile_form = UserProfileForms(data=request.POST)
+        profile_form = UserProfileForm(data=request.POST)
 
         # If the two forms are valid...
         if user_form.is_valid() and profile_form.is_valid():
@@ -173,5 +174,6 @@ def register(request):
 
     return render(request,
                   'rango/register.html',
-                  {'user_form': profile_form,
+                  {'user_form': user_form,
+                   'profile_form': profile_form,
                    'registered': registered})

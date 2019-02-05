@@ -22,6 +22,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
 class Page(models.Model):
     title_max_length = 128
     url_max_length = 200
@@ -32,6 +33,7 @@ class Page(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class UserProfile(models.Model):
     # This line is required. links UserProfile to a User model instance
