@@ -81,7 +81,16 @@ def about(request):
     if request.session.test_cookie_worked():
         print("TEST COOKIE WORKED!")
         request.session.delete_test_cookie()
-    return render(request, 'rango/about.html')
+    context_dict = {}
+
+    # Call the helper function to handle the cookies
+    visitor_cookie_handler(request)
+    context_dict['visits'] = request.session['visits']
+
+    # Obtain out Response object early so we can add cookie information.
+    response = render(request, 'rango/about.html', context_dict)
+
+    return response
 
 
 def show_category(request, category_name_slug):
